@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de Eventos y Base de Conocimientos</title>
+    <link rel="icon" href="icono_bitacora.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .menu-content button {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-content button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .menu:hover .menu-content {
+            display: block;
+        }
+
+        .hamburger-icon {
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo {
+            margin-right: 10px;
+        }
+
+        .form-container {
+            margin: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-container input,
+        .form-container textarea,
+        .form-container select {
+            display: block;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .form-container button[type="button"] {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-container button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container .btn-clear {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .form-container .btn-clear:hover {
+            background-color: #c82333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .highlight {
+            background-color: yellow;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <span class="hamburger-icon">&#9776;</span>
+        <div class="title">
+            <img src="logo_bitacora.png" alt="Logo Bitácora" width="30" height="30" class="logo">
+            <span>Bitácora de Eventos y Base de Conocimientos</span>
+        </div>
+        <div class="menu-content">
+            <button onclick="showForm('alta')">Altas</button>
+            <button onclick="showForm('reporte')">Reportes</button>
+            <button onclick="showForm('consulta')">Consulta</button>
+            <button onclick="showForm('documentacion')">Documentación</button>
+            <button onclick="showForm('ayuda')">Ayuda</button>
+        </div>
+    </div>
+
+    <div class="form-container hidden" id="form-alta">
+        <h2>Alta de Registro</h2>
+        <form id="alta-form">
+            <div class="form-group">
+                <label for="nombreSistema">Nombre del Sistema:</label>
+                <input type="text" id="nombreSistema" name="nombreSistema" placeholder="Nombre del Sistema" required>
+            </div>
+
+            <div class="form-group">
+                <label for="subsistemaServicio">Subsistema/Servicio:</label>
+                <input type="text" id="subsistemaServicio" name="subsistemaServicio"
+                    placeholder="Subsistema/Servicio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="atencionSeguimiento">Atención/Seguimiento:</label>
+                <select id="atencionSeguimiento" name="atencionSeguimiento" required>
+                    <option value="">Seleccione un responsable</option>
+                    <option value="Equipo DreamTeam AprovVsi">Equipo DreamTeam AprovVsi</option>
+                    <option value="Jaime Valencia">Jaime Valencia</option>
+                    <option value="Jorge Aleman">Jorge Aleman</option>
+                    <option value="Mario Venegas">Mario Venegas</option>
+                    <option value="Mayeli Espina">Mayeli Espina</option>
+                    <option value="Vania Gonzalez">Vania Gonzalez</option>
+                    <option value="Gabriel Gomez">Gabriel Gomez</option>
+                    <option value="otro equipo">Otro equipo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="clave">Clave:</label>
+                <input type="text" id="clave" name="clave" placeholder="Automático" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="fechaInicio">Fecha y Hora de Inicio:</label>
+                <input type="datetime-local" id="fechaInicio" name="fechaInicio"
+                    placeholder="Fecha y Hora de Inicio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="estatusProblema">Estatus del Problema:</label>
+                <select id="estatusProblema" name="estatusProblema" required>
+                    <option value="">Seleccione un estatus</option>
+                    <option value="nuevo">Nuevo</option>
+                    <option value="en_proceso">En Proceso</option>
+                    <option value="resuelto">Resuelto</option>
+                    <option value="cerrado">Cerrado</option>
+                    <option value="en_espera">En Espera</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nombreProblema">Nombre del Problema:</label>
+                <input type="text" id="nombreProblema" name="nombreProblema" placeholder="Nombre del Problema"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcionBreve">Descripción Breve del Problema:</label>
+                <textarea id="descripcionBreve" name="descripcionBreve"
+                    placeholder="Descripción Breve del Problema" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="detalleProblema">Detalle del Problema:</label>
+                <textarea id="detalleProblema" name="detalleProblema" placeholder="Detalle del Problema"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="codigoMensaje">Código o Mensaje:</label>
+                <input type="text" id="codigoMensaje" name="codigoMensaje" placeholder="Código o Mensaje" required>
+            </div>
+
+            <div class="form-group">
+                <label for="solucionProblema">Solución al Problema:</label>
+                <textarea id="solucionProblema" name="solucionProblema" placeholder="Solución al Problema"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="acciones">Acciones:</label>
+                <textarea id="acciones" name="acciones" placeholder="Acciones" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="actores">Actores:</label>
+                <textarea id="actores" name="actores" placeholder="Actores" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="areaSolucionadora">Área Solucionadora:</label>
+                <input type="text" id="areaSolucionadora" name="areaSolucionadora" placeholder="Área Solucionadora"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="fechaCierre">Fecha y Hora de Cierre:</label>
+                <input type="datetime-local" id="fechaCierre" name="fechaCierre"
+                    placeholder="Fecha y Hora de Cierre" required>
+            </div>
+
+            <button type="button" onclick="altaRegistro()">Guardar</button>
+            <button type="button" class="btn-clear" onclick="limpiarFormulario('alta-form')">Limpiar</button>
+        </form>
+    </div>
+
+    <div class="form-container hidden" id="form-consulta">
+        <h2>Consulta de Registros</h2>
+        <div class="search-container">
+            <input type="text" id="consulta-clave" placeholder="Buscar por clave">
+            <span class="search-icon" onclick="consultaRegistro()">&#128269;</span>
+        </div>
+        <div id="resultado-consulta"></div>
+        <button type="button" class="btn-clear" onclick="limpiarResultadosConsulta()">Limpiar</button>
+    </div>
+
+    <div class="form-container hidden" id="form-edicion">
+        <h2>Edición de Registro</h2>
+        <form id="edicion-form">
+            <div class="form-group">
+                <label for="edicion-nombreSistema">Nombre del Sistema:</label>
+                <input type="text" id="edicion-nombreSistema" name="nombreSistema" placeholder="Nombre del Sistema"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-subsistemaServicio">Subsistema/Servicio:</label>
+                <input type="text" id="edicion-subsistemaServicio" name="subsistemaServicio"
+                    placeholder="Subsistema/Servicio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-atencionSeguimiento">Atención/Seguimiento:</label>
+                <select id="edicion-atencionSeguimiento" name="atencionSeguimiento" required>
+                    <option value="">Seleccione un responsable</option>
+                    <option value="Equipo DreamTeam AprovVsi">Equipo DreamTeam AprovVsi</option>
+                    <option value="Jaime Valencia">Jaime Valencia</option>
+                    <option value="Jorge Aleman">Jorge Aleman</option>
+                    <option value="Mario Venegas">Mario Venegas</option>
+                    <option value="Mayeli Espina">Mayeli Espina</option>
+                    <option value="Vania Gonzalez">Vania Gonzalez</option>
+                    <option value="Gabriel Gomez">Gabriel Gomez</option>
+                    <option value="otro equipo">Otro equipo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-clave">Clave:</label>
+                <input type="text" id="edicion-clave" name="clave" placeholder="Automático" required readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-fechaInicio">Fecha y Hora de Inicio:</label>
+                <input type="datetime-local" id="edicion-fechaInicio" name="fechaInicio"
+                    placeholder="Fecha y Hora de Inicio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-estatusProblema">Estatus del Problema:</label>
+                <select id="edicion-estatusProblema" name="estatusProblema" required>
+                    <option value="">Seleccione un estatus</option>
+                    <option value="nuevo">Nuevo</option>
+                    <option value="en_proceso">En Proceso</option>
+                    <option value="resuelto">Resuelto</option>
+                    <option value="cerrado">Cerrado</option>
+                    <option value="en_espera">En Espera</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-nombreProblema">Nombre del Problema:</label>
+                <input type="text" id="edicion-nombreProblema" name="nombreProblema" placeholder="Nombre del Problema"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-descripcionBreve">Descripción Breve del Problema:</label>
+                <textarea id="edicion-descripcionBreve" name="descripcionBreve"
+                    placeholder="Descripción Breve del Problema" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-detalleProblema">Detalle del Problema:</label>
+                <textarea id="edicion-detalleProblema" name="detalleProblema" placeholder="Detalle del Problema"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-codigoMensaje">Código o Mensaje:</label>
+                <input type="text" id="edicion-codigoMensaje" name="codigoMensaje" placeholder="Código o Mensaje"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-solucionProblema">Solución al Problema:</label>
+                <textarea id="edicion-solucionProblema" name="solucionProblema" placeholder="Solución al Problema"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-acciones">Acciones:</label>
+                <textarea id="edicion-acciones" name="acciones" placeholder="Acciones" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-actores">Actores:</label>
+                <textarea id="edicion-actores" name="actores" placeholder="Actores" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-areaSolucionadora">Área Solucionadora:</label>
+                <input type="text" id="edicion-areaSolucionadora" name="areaSolucionadora"
+                    placeholder="Área Solucionadora" required>
+            </div>
+
+            <div class="form-group">
+                <label for="edicion-fechaCierre">Fecha y Hora de Cierre:</label>
+                <input type="datetime-local" id="edicion-fechaCierre" name="fechaCierre"
+                    placeholder="Fecha y Hora de Cierre" required>
+            </div>
+
+            <button type="button" onclick="actualizarRegistro()">Actualizar</button>
+            <button type="button" class="btn-clear" onclick="limpiarFormulario('edicion-form')">Limpiar</button>
+        </form>
+    </div>
+
+    <div class="form-container hidden" id="form-reporte">
+        <h2>Generar Reporte</h2>
+        <input type="date" id="reporte-fechaInicio" placeholder="Fecha de Inicio">
+        <input type="date" id="reporte-fechaFin" placeholder="Fecha de Fin">
+        <button type="button" onclick="generarReporte()">Generar Reporte</button>
+        <div id="reporte-resultado"></div>
+        <button type="button" onclick="guardarReporte()">Guardar Reporte como HTML</button>
+        <button type="button" class="btn-clear" onclick="limpiarResultadosReporte()">Limpiar</button>
+    </div>
+
+    <div class="form-container hidden" id="form-documentacion">
+        <h2>Documentación</h2>
+        <div id="documentacion">
+            <h3>¿Qué es la Bitácora de Eventos y Base de Conocimientos?</h3>
+            <p>La Bitácora de Eventos y Base de Conocimientos es una herramienta diseñada para registrar, consultar,
+                editar y eliminar registros de eventos que ocurren en una organización. Proporciona una manera
+                estructurada de documentar problemas, soluciones y acciones tomadas para resolverlos, creando una base de
+                conocimiento útil para futuras referencias.</p>
+            <h3>¿Qué hace la Bitácora de Eventos y Base de Conocimientos?</h3>
+            <p>El sistema permite a los usuarios:</p>
+            <ul>
+                <li>Registrar nuevos eventos con detalles completos.</li>
+                <li>Buscar y consultar eventos registrados previamente.</li>
+                <li>Editar los detalles de eventos existentes.</li>
+                <li>Eliminar registros que ya no son necesarios.</li>
+                <li>Generar reportes basados en un rango de fechas específico.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="form-container hidden" id="form-ayuda">
+        <h2>Ayuda</h2>
+        <div id="ayuda">
+            <p><strong>Preguntas Frecuentes</strong></p>
+            <p><strong>1. ¿Cómo agrego un nuevo registro?</strong></p>
+            <p>Para agregar un nuevo registro, vaya a la opción "Altas" en el menú y complete el formulario con los datos
+                requeridos. Luego haga clic en "Guardar".</p>
+            <p><strong>2. ¿Cómo busco un registro existente?</strong></p>
+            <p>Para buscar un registro existente, vaya a la opción "Consulta" en el menú, ingrese la clave del registro en
+                el campo de búsqueda y los resultados se mostrarán automáticamente.</p>
+        </div>
+    </div>
+
+    <script src="bitacora.js"></script>
+    <script>
+        // Asegúrate de que este código se ejecute después de que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function () {
+            // Función para generar la clave automática
+            function generarClaveAutomatica() {
+                let registros = obtenerRegistros();
+                let nuevoNumero = registros.length + 1;
+                let clave = "BIE-" + String(nuevoNumero).padStart(3, '0');
+                return clave;
+            }
+
+            // Asignar la clave automática al campo "Clave" al cargar el formulario de alta
+            document.getElementById('alta-form').addEventListener('submit', function (event) {
+                let claveInput = document.getElementById('clave');
+                if (!claveInput.value) {
+                    claveInput.value = generarClaveAutomatica();
+                }
+            });
+
+            // Asignar la clave automática al campo "Clave" al cargar el formulario de edición
+            document.getElementById('edicion-form').addEventListener('submit', function (event) {
+                let claveInput = document.getElementById('edicion-clave');
+                if (!claveInput.value) {
+                    claveInput.value = generarClaveAutomatica();
+                }
+            });
+
+            // Inicializar el campo de clave al mostrar el formulario de alta
+            document.querySelector('[onclick="showForm(\'alta\')"]').addEventListener('click', function () {
+                let claveInput = document.getElementById('clave');
+                claveInput.value = generarClaveAutomatica();
+            });
+        });
+    </script>
+</body>
+
+</html>
