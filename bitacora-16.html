@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Bitácora</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .menu {
+            position: relative;
+            display: inline-block;
+        }
+        .menu-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-content button {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu-content button:hover {
+            background-color: #f1f1f1;
+        }
+        .menu:hover .menu-content {
+            display: block;
+        }
+        .hamburger-icon {
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .title {
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .form-container {
+            margin: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-container input, .form-container textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .form-container button[type="button"] {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-container button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        .form-container .btn-clear {
+            background-color: #dc3545;
+            color: white;
+        }
+        .form-container .btn-clear:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+        .search-container {
+            position: relative;
+        }
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .highlight {
+            background-color: yellow;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <span class="hamburger-icon">&#9776;</span>
+        <span class="title">Bitácora de Eventos</span>
+        <div class="menu-content">
+            <button onclick="showForm('alta')">Altas</button>
+            <button onclick="showForm('baja')">Bajas</button>
+            <button onclick="showForm('cambio')">Cambios</button>
+            <button onclick="showForm('actualizacion')">Actualizaciones</button>
+            <button onclick="showForm('reporte')">Reportes</button>
+            <button onclick="showForm('consulta')">Consulta</button>
+            <button onclick="showForm('documentacion')">Documentación</button>
+            <button onclick="showForm('ayuda')">Ayuda</button>
+        </div>
+    </div>
+
+    <div class="form-container hidden" id="form-alta">
+        <h2>Alta de Registro</h2>
+        <form id="alta-form">
+            <input type="text" id="clave" name="clave" placeholder="Clave" required>
+            <input type="datetime-local" id="fechaInicio" name="fechaInicio" placeholder="Fecha y Hora de Inicio" required>
+            <input type="text" id="nombreProblema" name="nombreProblema" placeholder="Nombre del Problema" required>
+            <textarea id="descripcionBreve" name="descripcionBreve" placeholder="Descripción Breve del Problema" required></textarea>
+            <input type="text" id="codigoMensaje" name="codigoMensaje" placeholder="Código o Mensaje" required>
+            <textarea id="detalleProblema" name="detalleProblema" placeholder="Detalle del Problema" required></textarea>
+            <textarea id="solucionProblema" name="solucionProblema" placeholder="Solución al Problema" required></textarea>
+            <textarea id="acciones" name="acciones" placeholder="Acciones" required></textarea>
+            <textarea id="actores" name="actores" placeholder="Actores" required></textarea>
+            <input type="text" id="areaSolucionadora" name="areaSolucionadora" placeholder="Área Solucionadora" required>
+            <input type="datetime-local" id="fechaCierre" name="fechaCierre" placeholder="Fecha y Hora de Cierre" required>
+            <input type="text" id="estatusProblema" name="estatusProblema" placeholder="Estatus del Problema" required>
+            <button type="button" onclick="altaRegistro()">Guardar</button>
+            <button type="button" class="btn-clear" onclick="limpiarFormulario('alta-form')">Limpiar</button>
+        </form>
+    </div>
+
+    <div class="form-container hidden" id="form-consulta">
+        <h2>Consulta de Registros</h2>
+        <div class="search-container">
+            <input type="text" id="consulta-clave" placeholder="Buscar por clave">
+            <span class="search-icon">&#128269;</span>
+        </div>
+        <div id="resultado-consulta"></div>
+        <button type="button" class="btn-clear" onclick="limpiarResultadosConsulta()">Limpiar</button>
+    </div>
+
+    <div class="form-container hidden" id="form-edicion">
+        <h2>Edición de Registro</h2>
+        <form id="edicion-form">
+            <input type="text" id="edicion-clave" name="clave" placeholder="Clave" required readonly>
+            <input type="datetime-local" id="edicion-fechaInicio" name="fechaInicio" placeholder="Fecha y Hora de Inicio" required>
+            <input type="text" id="edicion-nombreProblema" name="nombreProblema" placeholder="Nombre del Problema" required>
+            <textarea id="edicion-descripcionBreve" name="descripcionBreve" placeholder="Descripción Breve del Problema" required></textarea>
+            <input type="text" id="edicion-codigoMensaje" name="codigoMensaje" placeholder="Código o Mensaje" required>
+            <textarea id="edicion-detalleProblema" name="detalleProblema" placeholder="Detalle del Problema" required></textarea>
+            <textarea id="edicion-solucionProblema" name="solucionProblema" placeholder="Solución al Problema" required></textarea>
+            <textarea id="edicion-acciones" name="acciones" placeholder="Acciones" required></textarea>
+            <textarea id="edicion-actores" name="actores" placeholder="Actores" required></textarea>
+            <input type="text" id="edicion-areaSolucionadora" name="areaSolucionadora" placeholder="Área Solucionadora" required>
+            <input type="datetime-local" id="edicion-fechaCierre" name="fechaCierre" placeholder="Fecha y Hora de Cierre" required>
+            <input type="text" id="edicion-estatusProblema" name="estatusProblema" placeholder="Estatus del Problema" required>
+            <button type="button" onclick="actualizarRegistro()">Actualizar</button>
+            <button type="button" class="btn-clear" onclick="limpiarFormulario('edicion-form')">Limpiar</button>
+        </form>
+    </div>
+
+    <div class="form-container hidden" id="form-reporte">
+        <h2>Generar Reporte</h2>
+        <input type="date" id="reporte-fechaInicio" placeholder="Fecha de Inicio">
+        <input type="date" id="reporte-fechaFin" placeholder="Fecha de Fin">
+        <button type="button" onclick="generarReporte()">Generar Reporte</button>
+        <div id="reporte-resultado"></div>
+        <button type="button" class="btn-clear" onclick="limpiarResultadosReporte()">Limpiar</button>
+    </div>
+
+    <script src="bitacora.js"></script>
+</body>
+</html>
